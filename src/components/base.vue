@@ -7,6 +7,7 @@
         <a-menu-item class="left-side-item">CONSOLE</a-menu-item>
       </a-menu>
     </a-layout-sider>
+    <router-view></router-view>
   </a-layout>
 </template>
 
