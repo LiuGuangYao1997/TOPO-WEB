@@ -5,7 +5,8 @@ import router from './router/index'
 //导入antd
 import 'ant-design-vue/dist/antd.css'
 //导入element-ui组件
-import { Table, TableColumn, Pagination,Radio} from 'element-ui';
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
 //导入页面加载进度条
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
@@ -123,10 +124,7 @@ Vue.use(Upload);
 Vue.use(Skeleton);
 Vue.use(ConfigProvider);
 //element ui 表格
-Vue.use(Table);
-Vue.use(TableColumn);
-Vue.use(Pagination);
-Vue.use(Radio);
+Vue.use(ElementUI);
 
 Vue.config.productionTip = false;
 
