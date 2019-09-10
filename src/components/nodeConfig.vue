@@ -1,13 +1,9 @@
 <template>
   <div class="nodeConfig">
     <!-- 菜单 -->
-    <a-menu
-            mode="horizontal"
-    >
-      <a-menu-item>
-        <label class="menu-item">节点配置</label>
-      </a-menu-item>
-    </a-menu>
+    <a-tabs default-active-key="1">
+      <a-tab-pane tab="节点配置" key="1"></a-tab-pane>
+    </a-tabs>
     <!-- 表单 -->
     <a-form layout="inline">
       <a-form-item>
@@ -152,6 +148,6 @@
     padding: 20px;
   }
   .formOptBut {
-    background-color: #249aff;
+    background-color: rgba(22, 155, 213, 1);
   }
 </style>
