@@ -1,3 +1,7 @@
+<!--
+Author: liu.guangyao
+Date: 2019/9/10 09:00
+-->
 <template>
   <div class="nodeConfig">
     <!-- 菜单 -->
