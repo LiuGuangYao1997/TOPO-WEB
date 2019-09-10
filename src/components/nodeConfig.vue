@@ -46,34 +46,46 @@ Date: 2019/9/10 09:00
 
     <!-- 新增的浮窗及表单 -->
     <a-modal title="节点配置" width="600px"
-             :visible="visible" @ok="handleOk"
+             :visible="visible" @ok="insertNodeSubmit"
              okText="确定"
              cancelText="取消"
              :confirmLoading="confirmLoading"
              @cancel="closeInsertView">
-      <a-form layout="inline" :form="insertNodeForm" @submit="insertNodeSubmit">
+      <a-form layout="inline" :form="insertNodeForm">
         <a-form-item label="节点名称">
           <a-input
                   v-decorator="['nodeName', {rules: [{ required: true, message: '请输入节点名称!' }]}]"
                   placeholder="用户输入"></a-input>
         </a-form-item>
         <a-form-item label="节点类型">
-          <a-input placeholder="默认/交换机/路由器"></a-input>
+          <a-input
+                  v-decorator="['nodeType', {rules: [{ required: true, message: '请输入节点类型!' }]}]"
+                  placeholder="默认/交换机/路由器"></a-input>
         </a-form-item>
         <a-form-item label="图标">
-          <a-input placeholder="图标选择或上传"></a-input>
+          <a-input
+                  v-decorator="['nodeImgUrl', {rules: [{ required: true, message: '请输入节点图标地址!' }]}]"
+                  placeholder="图标选择或上传"></a-input>
         </a-form-item>
         <a-form-item label="图标大小">
-          <a-input placeholder="64*64"></a-input>
+          <a-input
+                  v-decorator="['nodeImgSize']"
+                  placeholder="64*64"></a-input>
         </a-form-item>
         <a-form-item label="字体大小">
-          <a-input placeholder="14"></a-input>
+          <a-input
+                  v-decorator="['nodeFontSize']"
+                  placeholder="14"></a-input>
         </a-form-item>
         <a-form-item label="字体颜色">
-          <a-input placeholder="颜色选择"></a-input>
+          <a-input
+                  v-decorator="['nodeFontColor']"
+                  placeholder="颜色选择"></a-input>
         </a-form-item>
         <a-form-item label="互斥组">
-          <a-input placeholder=""></a-input>
+          <a-input
+                  v-decorator="['mutualExclusionGroup']"
+                  placeholder=""></a-input>
         </a-form-item>
       </a-form>
     </a-modal>
@@ -146,7 +158,7 @@ Date: 2019/9/10 09:00
 <script>
 
     import AFormItem from "ant-design-vue/es/form/FormItem";
-    import {nodeInsert} from "@api/requestManage.js";
+ /*   import {nodeInsert} from "../api/requestManage.js";*/
 
     export default {
         name: "nodeConfig",
@@ -188,6 +200,8 @@ Date: 2019/9/10 09:00
             },
             insertNodeSubmit(e) {
               alert("submit insert");
+              let formValue = this.insertNodeForm.getFieldsValue();
+              alert(formValue.nodeName);
               e.preventDefault();
               this.form.validateFields((err, values) => {
                   if (!err) {
