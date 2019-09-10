@@ -36,9 +36,41 @@
         <a-button class="formOptBut"><span class="formOptSpan">重置</span></a-button>
       </a-form-item>
       <a-form-item>
-        <a-button class="formOptBut"><span class="formOptSpan">新增</span></a-button>
+        <a-button class="formOptBut" @click="doInsert"><span class="formOptSpan">新增</span></a-button>
       </a-form-item>
     </a-form>
+
+    <!-- 新增的浮窗及表单 -->
+    <a-modal title="节点配置" width="600px"
+             :visible="visible" @ok="handleOk"
+             okText="确定"
+             cancelText="取消"
+             :confirmLoading="confirmLoading"
+             @cancel="handleCancel">
+      <a-form layout="inline">
+        <a-form-item label="节点名称">
+          <a-input placeholder="用户输入"></a-input>
+        </a-form-item>
+        <a-form-item label="节点类型">
+          <a-input placeholder="默认/交换机/路由器"></a-input>
+        </a-form-item>
+        <a-form-item label="图标">
+          <a-input placeholder="图标选择或上传"></a-input>
+        </a-form-item>
+        <a-form-item label="图标大小">
+          <a-input placeholder="64*64"></a-input>
+        </a-form-item>
+        <a-form-item label="字体大小">
+          <a-input placeholder="14"></a-input>
+        </a-form-item>
+        <a-form-item label="字体颜色">
+          <a-input placeholder="颜色选择"></a-input>
+        </a-form-item>
+        <a-form-item label="互斥组">
+          <a-input placeholder=""></a-input>
+        </a-form-item>
+      </a-form>
+    </a-modal>
 
     <!-- 表格 -->
     <el-table
@@ -50,7 +82,7 @@
       <el-table-column prop="id" label="序号" width="50">
       </el-table-column>
       <el-table-column label="操作" width="180">
-        <template slot-scope="scope">
+        <template>
           <a class="tableOpt">详情</a>
           <a class="tableOpt">修改</a>
           <a class="tableOpt">删除</a>
@@ -134,7 +166,17 @@
                     size: '32*32',
                     mutualExclusionGroup: '华为云',
                     createTime: '2019-03-26 09:00:01'
-                }]
+                }],
+                visible: false,
+                confirmLoading: false
+            }
+        },
+        methods: {
+            doInsert() {
+                this.visible = true;
+            },
+            handleCancel() {
+                this.visible = false;
             }
         }
     }
@@ -161,6 +203,7 @@
   a-form-item {
     padding-left: 20px;
   }
+
   .tableOpt {
     padding-left: 10px;
   }
