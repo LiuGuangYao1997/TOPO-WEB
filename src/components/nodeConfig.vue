@@ -158,7 +158,7 @@ Date: 2019/9/10 09:00
 <script>
 
     import AFormItem from "ant-design-vue/es/form/FormItem";
- /*   import {nodeInsert} from "../api/requestManage.js";*/
+    import {nodeInsert} from "../api/requestManage.js";
 
     export default {
         name: "nodeConfig",
@@ -203,9 +203,10 @@ Date: 2019/9/10 09:00
               let formValue = this.insertNodeForm.getFieldsValue();
               alert(formValue.nodeName);
               e.preventDefault();
-              this.form.validateFields((err, values) => {
+              this.insertNodeForm.validateFields((err, values) => {
                   if (!err) {
                       console.log('Received values of form: ', values);
+                      nodeInsert(values);
                   }
               });
             }

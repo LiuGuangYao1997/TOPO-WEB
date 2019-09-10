@@ -2,26 +2,24 @@
  *  @author liuyihu
  *  @date 2019/4/28 11:23
  */
-import {notification, Modal} from 'ant-design-vue'
-import Vue from 'vue'
-import axios from 'axios'
-import qs from 'qs'
+import {notification, Modal} from 'ant-design-vue' //引入ant-design-vue(前端视觉框架) notification:通知提醒框, Modal对话框
+import axios from 'axios' //导入axios组件(axios组件提供了ajax的方法)
+import qs from 'qs' //序列化组件
 
 const service = axios.create({
-    baseURL: 'http://127.0.0.1:8080', // 请求访问域名
+    baseURL: 'http://localhost:8080', // 请求访问域名, 浏览器发送请求到node.js, node.js进行处理后再向后台发送请求, 这就是后台请求的地址
     timeout: 6000, // 请求超时时间
-    withCredentials: true
+    withCredentials: true //指示了是否该使用类似cookies,authorization headers(头部授权)或者TLS客户端证书这一类资格证书来创建一个跨站点访问控制（cross-site Access-Control）请求
 })
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';        //配置请求头
-axios.defaults.headers.common['X-Access-Token'] = Vue.ls.get('Access-Token');
 
-const err = (error) => {
-    if (error.response) {
+const err = (error) => { //定义一个常量err方法, 方法形参为一个error对象
+    if (error.response) { //如果有响应值 则执行
         let data = error.response.data
         const token = localStorage.getItem("ACCESS_TOKEN")
         console.log("------异常响应------", token)
         console.log("------异常响应------", error.response.status)
-        switch (error.response.status) {
+        switch (error.response.status) { // 判断错误响应代码
             case 403:
                 notification.error({message: '系统提示', description: '拒绝访问', duration: 4})
                 break
@@ -66,13 +64,12 @@ const err = (error) => {
 
 // response interceptor
 service.interceptors.response.use((response) => {
-    /*if (response.data.code == '2000' || response.data.code == '3000') {
+    if (response.data.code == '2000' || response.data.code == '3000') {
         return response.data
     } else {
         notification.error({message: '系统提示', description: '111', duration: 4})
         return {desc: '请求失败'}
-    }*/
-    return response.data
+    }
 }, err)
 
 /**
