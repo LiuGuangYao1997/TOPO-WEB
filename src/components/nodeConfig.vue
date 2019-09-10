@@ -5,7 +5,7 @@
       <a-tab-pane tab="节点配置" key="1"></a-tab-pane>
     </a-tabs>
     <!-- 表单 -->
-    <a-form layout="inline">
+    <a-form layout="inline" style="padding-bottom: 20px">
       <a-form-item>
         <label>节点名称: </label>
       </a-form-item>
@@ -18,11 +18,11 @@
       <a-form-item>
         <a-input placeholder="模糊匹配"></a-input>
       </a-form-item>
-      <a-form-item>
+      <a-form-item style="padding-left: 50px">
         <label>xx: </label>
       </a-form-item>
       <a-form-item>
-        <a-select defaultValue="1" >
+        <a-select defaultValue="1">
           <a-select-option value="1">请选择</a-select-option>
           <a-select-option value="2">监控中</a-select-option>
           <a-select-option value="3">已停卡</a-select-option>
@@ -30,34 +30,31 @@
         </a-select>
       </a-form-item>
       <a-form-item>
-        <a-button class="formOptBut">查询</a-button>
+        <a-button class="formOptBut"><span class="formOptSpan">查询</span></a-button>
       </a-form-item>
       <a-form-item>
-        <a-button class="formOptBut">重置</a-button>
+        <a-button class="formOptBut"><span class="formOptSpan">重置</span></a-button>
       </a-form-item>
       <a-form-item>
-        <a-button class="formOptBut">新增</a-button>
+        <a-button class="formOptBut"><span class="formOptSpan">新增</span></a-button>
       </a-form-item>
     </a-form>
 
     <!-- 表格 -->
     <el-table
             :data="tableData"
+            size="small"
             border
-    >
-      <el-table-column
-              prop="id"
-              label="序号"
-              width="50">
+            :header-cell-style="{background:'#eef1f6',color:'#606266',textAlign:'center'}"
+            :cell-style="{textAlign:'center'}">
+      <el-table-column prop="id" label="序号" width="50">
       </el-table-column>
-      <el-table-column
-              label="操作"
-              width="160">
+      <el-table-column label="操作" width="180">
         <template slot-scope="scope">
-          <a>详情</a>
-          <a>修改</a>
-          <a>删除</a>
-          <a>打标签</a>
+          <a class="tableOpt">详情</a>
+          <a class="tableOpt">修改</a>
+          <a class="tableOpt">删除</a>
+          <a class="tableOpt">打标签</a>
         </template>
       </el-table-column>
       <el-table-column
@@ -66,7 +63,8 @@
       </el-table-column>
       <el-table-column
               prop="label"
-              label="标签">
+              label="标签"
+              width="100">
       </el-table-column>
       <el-table-column
               prop="nodeCode"
@@ -94,6 +92,8 @@
       </el-table-column>
     </el-table>
     <el-pagination
+            style="padding-top: 20px"
+            background
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage4"
@@ -108,6 +108,7 @@
 <script>
 
     import AFormItem from "ant-design-vue/es/form/FormItem";
+
     export default {
         name: "nodeConfig",
         components: {AFormItem},
@@ -147,7 +148,20 @@
     border: 1px solid rgba(169, 169, 169, 0.25);
     padding: 20px;
   }
+
   .formOptBut {
     background-color: rgba(22, 155, 213, 1);
+  }
+
+  .formOptSpan {
+    color: white;
+    font-size: 13px;
+  }
+
+  a-form-item {
+    padding-left: 20px;
+  }
+  .tableOpt {
+    padding-left: 10px;
   }
 </style>
