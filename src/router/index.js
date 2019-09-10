@@ -8,24 +8,17 @@ export default new Router({
     routes: [
         {
             path: '/',
-            redirect: '/base/index'
+            redirect: '/index'
         },
         {
-            path: '/base/',
-            component: () => import('../components/base.vue'),
-            redirect: '/base/index',
-            children: [
-                {
-                    path: 'index',
-                    name: 'index',
-                    component: () => import('../components/index.vue')
-                },
-                {
-                    path: 'nodeConfig',
-                    name: 'nodeConfig',
-                    component: () => import('../components/nodeConfig.vue')
-                }
-            ]
+            path: '/index',
+            name: 'index',
+            component: () => import('../components/index.vue')
+        },
+        {
+            path: '/nodeConfig',
+            name: 'nodeConfig',
+            component: () => import('../components/nodeConfig.vue')
         }
     ]
 })
