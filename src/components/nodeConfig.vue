@@ -144,6 +144,7 @@ Date: 2019/9/10 09:00
 <script>
 
     import AFormItem from "ant-design-vue/es/form/FormItem";
+    import {nodeInsert} from "@api/requestManage.js";
 
     export default {
         name: "nodeConfig",
