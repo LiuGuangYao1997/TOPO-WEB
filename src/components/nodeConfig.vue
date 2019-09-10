@@ -40,7 +40,7 @@ Date: 2019/9/10 09:00
         <a-button class="formOptBut"><span class="formOptSpan">重置</span></a-button>
       </a-form-item>
       <a-form-item>
-        <a-button class="formOptBut" @click="doInsert"><span class="formOptSpan">新增</span></a-button>
+        <a-button class="formOptBut" @click="openInsertView"><span class="formOptSpan">新增</span></a-button>
       </a-form-item>
     </a-form>
 
@@ -50,10 +50,12 @@ Date: 2019/9/10 09:00
              okText="确定"
              cancelText="取消"
              :confirmLoading="confirmLoading"
-             @cancel="handleCancel">
-      <a-form layout="inline">
+             @cancel="closeInsertView">
+      <a-form layout="inline" :form="insertNodeForm" @submit="insertNodeSubmit">
         <a-form-item label="节点名称">
-          <a-input placeholder="用户输入"></a-input>
+          <a-input
+                  v-decorator="['nodeName', {rules: [{ required: true, message: '请输入节点名称!' }]}]"
+                  placeholder="用户输入"></a-input>
         </a-form-item>
         <a-form-item label="节点类型">
           <a-input placeholder="默认/交换机/路由器"></a-input>
@@ -173,15 +175,25 @@ Date: 2019/9/10 09:00
                     createTime: '2019-03-26 09:00:01'
                 }],
                 visible: false,
-                confirmLoading: false
+                confirmLoading: false,
+                insertNodeForm: this.$form.createForm(this)
             }
         },
         methods: {
-            doInsert() {
+            openInsertView() {
                 this.visible = true;
             },
-            handleCancel() {
+            closeInsertView() {
                 this.visible = false;
+            },
+            insertNodeSubmit(e) {
+              alert("submit insert");
+              e.preventDefault();
+              this.form.validateFields((err, values) => {
+                  if (!err) {
+                      console.log('Received values of form: ', values);
+                  }
+              });
             }
         }
     }
