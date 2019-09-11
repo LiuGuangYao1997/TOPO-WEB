@@ -138,27 +138,7 @@ Date: 2019/9/10 09:00
         components: {AFormItem},
         data() {
             return {
-                tableData: [{
-                    id: '1',
-                    nodeName: '默认节点',
-                    label: '无',
-                    nodeCode: 'BASENODE',
-                    nodeType: '默认节点',
-                    img: '',
-                    size: '64*64',
-                    mutualExclusionGroup: '',
-                    createTime: '2019-03-26 09:00:01'
-                }, {
-                    id: '2',
-                    nodeName: '华为交换机',
-                    label: '华为',
-                    nodeCode: 'HWSWITCHNODE',
-                    nodeType: '交换机',
-                    img: '',
-                    size: '32*32',
-                    mutualExclusionGroup: '华为云',
-                    createTime: '2019-03-26 09:00:01'
-                }],
+                tableData: nodeQueryList(null).then(res => this.tableData = res.data),
                 visible: false,
                 confirmLoading: false,
                 insertNodeForm: this.$form.createForm(this)
