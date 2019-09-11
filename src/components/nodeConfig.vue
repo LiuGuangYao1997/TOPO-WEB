@@ -54,17 +54,17 @@ Date: 2019/9/10 09:00
       <a-form layout="inline" :form="insertNodeForm">
         <a-form-item label="节点名称">
           <a-input
-                  v-decorator="['nodeName', {rules: [{ required: true, message: '请输入节点名称!' }]}]"
+                  v-decorator="['name', {rules: [{ required: true, message: '请输入节点名称!' }]}]"
                   placeholder="用户输入"></a-input>
         </a-form-item>
         <a-form-item label="节点类型">
           <a-input
-                  v-decorator="['nodeType', {rules: [{ required: true, message: '请输入节点类型!' }]}]"
+                  v-decorator="['type', {rules: [{ required: true, message: '请输入节点类型!' }]}]"
                   placeholder="默认/交换机/路由器"></a-input>
         </a-form-item>
         <a-form-item label="图标">
           <a-input
-                  v-decorator="['nodeImgUrl', {rules: [{ required: true, message: '请输入节点图标地址!' }]}]"
+                  v-decorator="['iconUrl', {rules: [{ required: true, message: '请输入节点图标地址!' }]}]"
                   placeholder="图标选择或上传"></a-input>
         </a-form-item>
         <a-form-item label="图标大小">
@@ -74,17 +74,17 @@ Date: 2019/9/10 09:00
         </a-form-item>
         <a-form-item label="字体大小">
           <a-input
-                  v-decorator="['nodeFontSize']"
+                  v-decorator="['fontSize']"
                   placeholder="14"></a-input>
         </a-form-item>
         <a-form-item label="字体颜色">
           <a-input
-                  v-decorator="['nodeFontColor']"
+                  v-decorator="['fontColor']"
                   placeholder="颜色选择"></a-input>
         </a-form-item>
         <a-form-item label="互斥组">
           <a-input
-                  v-decorator="['mutualExclusionGroup']"
+                  v-decorator="['mutex']"
                   placeholder=""></a-input>
         </a-form-item>
       </a-form>
@@ -120,10 +120,10 @@ Date: 2019/9/10 09:00
             style="padding-top: 20px"
             background
             :current-page=1
-            :page-sizes="[100, 200, 300, 400]"
-            :page-size="100"
+            :page-size="pageSize"
+            :total="total">
             layout="prev, pager, next, total,  jumper"
-            :total="400">
+
     </el-pagination>
   </div>
 </template>
@@ -141,7 +141,9 @@ Date: 2019/9/10 09:00
                 tableData: nodeQueryList(null).then(res => this.tableData = res.data),
                 visible: false,
                 confirmLoading: false,
-                insertNodeForm: this.$form.createForm(this)
+                insertNodeForm: this.$form.createForm(this),
+                pageSize: 10,
+                total: 100,
             }
         },
         methods: {
@@ -157,7 +159,7 @@ Date: 2019/9/10 09:00
                   if (!err) {
                       console.log('Received values of form: ', values);
                       var result = nodeInsert(values);
-                      result.then((res)=>{this.visible=false;this.$message.success(res.data);});
+                      result.then((res)=>{this.visible=false;this.$message.success(res.data.desc);});
                   }
               });
             },
