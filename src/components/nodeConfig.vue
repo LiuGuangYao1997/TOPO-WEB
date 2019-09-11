@@ -14,30 +14,25 @@ Date: 2019/9/10 09:00
         <label>节点名称: </label>
       </a-form-item>
       <a-form-item>
-        <a-input placeholder="模糊匹配"></a-input>
+        <a-input v-model="tableAttribute.name" placeholder="模糊匹配"></a-input>
+      </a-form-item>
+      <a-form-item>
+        <label>节点编码: </label>
+      </a-form-item>
+      <a-form-item>
+        <a-input v-model="tableAttribute.code" placeholder="模糊匹配"></a-input>
       </a-form-item>
       <a-form-item>
         <label>节点类型: </label>
       </a-form-item>
       <a-form-item>
-        <a-input placeholder="模糊匹配"></a-input>
-      </a-form-item>
-      <a-form-item style="padding-left: 50px">
-        <label>xx: </label>
+        <a-input v-model="tableAttribute.type" placeholder="默认节点/交换机/路由器......"></a-input>
       </a-form-item>
       <a-form-item>
-        <a-select defaultValue="1">
-          <a-select-option value="1">请选择</a-select-option>
-          <a-select-option value="2">监控中</a-select-option>
-          <a-select-option value="3">已停卡</a-select-option>
-          <a-select-option value="4">已删除</a-select-option>
-        </a-select>
+        <a-button @click="queryTable" class="formOptBut"><span class="formOptSpan">查询</span></a-button>
       </a-form-item>
       <a-form-item>
-        <a-button class="formOptBut"><span class="formOptSpan">查询</span></a-button>
-      </a-form-item>
-      <a-form-item>
-        <a-button class="formOptBut"><span class="formOptSpan">重置</span></a-button>
+        <a-button @click="resetQuery" class="formOptBut"><span class="formOptSpan">重置</span></a-button>
       </a-form-item>
       <a-form-item>
         <a-button class="formOptBut" @click="openInsertView"><span class="formOptSpan">新增</span></a-button>
@@ -119,10 +114,11 @@ Date: 2019/9/10 09:00
     <el-pagination
             style="padding-top: 20px"
             background
-            :current-page="currentPage"
-            :page-size="pageSize"
-            :total="total">
-            layout="prev, pager, next, total, jumper"
+            :page-size="tableAttribute.pageSize"
+            :total="tableAttribute.total"
+            :current-page="tableAttribute.currentPage"
+            @current-change="handleCurrentChange"
+            layout="prev, pager, next, total, jumper">
 
     </el-pagination>
   </div>
@@ -139,18 +135,25 @@ Date: 2019/9/10 09:00
         data() {
             return {
                 tableData: [],
+                tableAttribute: {
+                    pageSize: 5,
+                    currentPage: 1,
+                    total: 10,
+                    name: null,
+                    code: null,
+                    type: null,
+                    sort: null,
+                    filed: null,
+                },
                 visible: false,
                 confirmLoading: false,
                 insertNodeForm: this.$form.createForm(this),
-                currentPage: 1,
-                pageSize: 2,
-                total: 100,
             }
         },
         created() {
-            nodeQueryList({page: 1, perpage: this.pageSize,}).then(res => {
+            nodeQueryList({page: 1, perpage: this.tableAttribute.pageSize,}).then(res => {
                 this.tableData = res.data.data.content;
-                this.total = res.data.data.totalElements;
+                this.tableAttribute.total = res.data.data.totalElements;
             });
         },
         methods: {
@@ -169,21 +172,38 @@ Date: 2019/9/10 09:00
                         result.then((res) => {
                             this.visible = false;
                             this.$message.success(res.data.desc);
+                            this.queryNodePage();
                         });
                     }
                 });
             },
-            queryNodePage(page, perpage, sort, filed, name, code, type) {
+            queryTable() {
+                this.queryNodePage();
+            },
+            resetQuery() {
+                this.tableAttribute.name = null;
+                this.tableAttribute.code = null;
+                this.tableAttribute.type = null;
+                this.queryNodePage()
+            },
+            queryNodePage() {
                 nodeQueryList({
-                    page: page, // 页码
-                    perpage: perpage, // 页面数
-                    sort: sort, // 排序方式(desc/asc)
-                    filed: filed, // 排序字段名
-                    name: name, // 节点名,查询
-                    code: code, // 节点编码,查询
-                    type: type // 节点类型,查询
-                }).then(res => this.tableData = res.data.data.data);
-            }
+                    page: this.tableAttribute.currentPage, // 页码
+                    perpage: this.tableAttribute.pageSize, // 页面容量
+                    sort: this.tableAttribute.sort, // 排序方式(desc/asc)
+                    filed: this.tableAttribute.filed, // 排序字段名
+                    name: this.tableAttribute.name, // 节点名,查询
+                    code: this.tableAttribute.code, // 节点编码,查询
+                    type: this.tableAttribute.type // 节点类型,查询
+                }).then(res => {
+                    this.tableData = res.data.data.content;
+                    this.tableAttribute.total = res.data.data.totalElements;
+                });
+            },
+            handleCurrentChange(val) {
+                this.tableAttribute.currentPage = val;
+                this.queryNodePage();
+            },
         }
     }
 </script>
