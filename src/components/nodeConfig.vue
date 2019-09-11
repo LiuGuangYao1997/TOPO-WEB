@@ -199,14 +199,14 @@ Date: 2019/9/10 09:00
                 this.visible = false;
             },
             insertNodeSubmit(e) {
-              alert("submit insert");
-              let formValue = this.insertNodeForm.getFieldsValue();
-              alert(formValue.nodeName);
               e.preventDefault();
               this.insertNodeForm.validateFields((err, values) => {
                   if (!err) {
                       console.log('Received values of form: ', values);
-                      nodeInsert(values);
+                      var result = nodeInsert(values);
+                      //alert(result);
+                      //console.log(result.toString());
+                      result.then((res)=>{alert(res.toString())},(err) => {alert(err)});
                   }
               });
             }
