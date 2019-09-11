@@ -107,22 +107,22 @@ Date: 2019/9/10 09:00
           <a class="tableOpt">打标签</a>
         </template>
       </el-table-column>
-      <el-table-column prop="nodeName" label="节点名称"></el-table-column>
+      <el-table-column prop="name" label="节点名称"></el-table-column>
       <el-table-column prop="label" label="标签" width="100"></el-table-column>
-      <el-table-column prop="nodeCode" label="节点编码"></el-table-column>
-      <el-table-column prop="nodeType" label="节点类型"></el-table-column>
-      <el-table-column prop="img" label="图标"></el-table-column>
+      <el-table-column prop="code" label="节点编码"></el-table-column>
+      <el-table-column prop="type" label="节点类型"></el-table-column>
+      <el-table-column prop="iconUrl" label="图标"></el-table-column>
       <el-table-column prop="size" label="大小"></el-table-column>
-      <el-table-column prop="mutualExclusionGroup" label="所属互斥组"></el-table-column>
+      <el-table-column prop="mutex" label="所属互斥组"></el-table-column>
       <el-table-column prop="createTime" label="创建时间"></el-table-column>
     </el-table>
     <el-pagination
             style="padding-top: 20px"
             background
-            :current-page=1
+            :current-page="currentPage"
             :page-size="pageSize"
             :total="total">
-            layout="prev, pager, next, total,  jumper"
+            layout="prev, pager, next, total, jumper"
 
     </el-pagination>
   </div>
@@ -138,13 +138,20 @@ Date: 2019/9/10 09:00
         components: {AFormItem},
         data() {
             return {
-                tableData: nodeQueryList(null).then(res => this.tableData = res.data),
+                tableData: [],
                 visible: false,
                 confirmLoading: false,
                 insertNodeForm: this.$form.createForm(this),
-                pageSize: 10,
+                currentPage: 1,
+                pageSize: 2,
                 total: 100,
             }
+        },
+        created() {
+            nodeQueryList({page: 1, perpage: this.pageSize,}).then(res => {
+                this.tableData = res.data.data.content;
+                this.total = res.data.data.totalElements;
+            });
         },
         methods: {
             openInsertView() {
@@ -154,15 +161,29 @@ Date: 2019/9/10 09:00
                 this.visible = false;
             },
             insertNodeSubmit(e) {
-              e.preventDefault();
-              this.insertNodeForm.validateFields((err, values) => {
-                  if (!err) {
-                      console.log('Received values of form: ', values);
-                      var result = nodeInsert(values);
-                      result.then((res)=>{this.visible=false;this.$message.success(res.data.desc);});
-                  }
-              });
+                e.preventDefault();
+                this.insertNodeForm.validateFields((err, values) => {
+                    if (!err) {
+                        console.log('Received values of form: ', values);
+                        var result = nodeInsert(values);
+                        result.then((res) => {
+                            this.visible = false;
+                            this.$message.success(res.data.desc);
+                        });
+                    }
+                });
             },
+            queryNodePage(page, perpage, sort, filed, name, code, type) {
+                nodeQueryList({
+                    page: page, // 页码
+                    perpage: perpage, // 页面数
+                    sort: sort, // 排序方式(desc/asc)
+                    filed: filed, // 排序字段名
+                    name: name, // 节点名,查询
+                    code: code, // 节点编码,查询
+                    type: type // 节点类型,查询
+                }).then(res => this.tableData = res.data.data.data);
+            }
         }
     }
 </script>

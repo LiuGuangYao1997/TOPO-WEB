@@ -16,5 +16,5 @@ export const demoPost = data => post('/modelManage/pageFindMmSpecAttribute', dat
 export const nodeInsert = data => post('/node/newNodeConfig', data);
 
 // 查询列表接口
-export const nodeQueryList = data => get('/node/queryList', data)
+export const nodeQueryList = data => post('/node/findNodeConfigByPage', data)
 
