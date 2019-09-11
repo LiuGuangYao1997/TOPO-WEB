@@ -8,8 +8,20 @@ module.exports={
             .set('@static', resolve('src/static'))
     },
     devServer: {
-        port: 8001
+        port: 8001,
     }
+    /*devServer: {
+        port: 8001,
+        proxy: {
+            '/api': {
+                target: 'http://localhost:8080',//后端接口地址
+                changeOrigin: true,//是否允许跨越
+                pathRewrite: {
+                    '^/api': '',//重写,
+                }
+            }
+        },
+    }*/
 }
 
 const path = require('path')
