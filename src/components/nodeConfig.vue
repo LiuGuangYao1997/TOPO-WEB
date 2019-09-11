@@ -90,6 +90,7 @@ Date: 2019/9/10 09:00
             :data="tableData"
             size="small"
             border
+            @row-click="rowClick"
             :header-cell-style="{background:'#eef1f6',color:'#606266',textAlign:'center'}"
             :cell-style="{textAlign:'center'}">
       <el-table-column prop="id" label="序号" width="50">
@@ -98,7 +99,7 @@ Date: 2019/9/10 09:00
         <template>
           <a class="tableOpt">详情</a>
           <a class="tableOpt">修改</a>
-          <a class="tableOpt">删除</a>
+          <a @click.prevent="setNodeDeleteFlag" class="tableOpt">删除</a>
           <a class="tableOpt">打标签</a>
         </template>
       </el-table-column>
@@ -127,7 +128,7 @@ Date: 2019/9/10 09:00
 <script>
 
     import AFormItem from "ant-design-vue/es/form/FormItem";
-    import {nodeInsert, nodeQueryList} from "../api/requestManage.js";
+    import {nodeInsert, nodeQueryList, nodeDelete} from "../api/requestManage.js";
 
     export default {
         name: "nodeConfig",
@@ -145,6 +146,7 @@ Date: 2019/9/10 09:00
                     sort: null,
                     filed: null,
                 },
+                optFlag: null,
                 visible: false,
                 confirmLoading: false,
                 insertNodeForm: this.$form.createForm(this),
@@ -204,6 +206,30 @@ Date: 2019/9/10 09:00
                 this.tableAttribute.currentPage = val;
                 this.queryNodePage();
             },
+            setNodeDeleteFlag() {
+                this.optFlag = "del";
+            },
+            doNodeDelete(row) {
+                this.$confirm("节点Id: " + row.id + ",  节点名: " + row.name, '确定要删除节点?', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    nodeDelete({id: row.id}).then(res => this.queryNodePage());
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            rowClick(row, column, event) {
+                this.doNodeDelete(row);
+            }
         }
     }
 </script>

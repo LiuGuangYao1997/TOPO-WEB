@@ -12,9 +12,11 @@ export const demoPost = data => post('/modelManage/pageFindMmSpecAttribute', dat
 
 // TOPO接口(本地测试)
 
-// 新增接口
+// 新增节点接口
 export const nodeInsert = data => post('/node/newNodeConfig', data);
 
-// 查询列表接口
-export const nodeQueryList = data => post('/node/findNodeConfigByPage', data)
+// 查询节点列表接口
+export const nodeQueryList = data => post('/node/findNodeConfigByPage', data);
+// 删除节点接口
+export const nodeDelete = data => post('/node//delNodeConfig', data);
 
