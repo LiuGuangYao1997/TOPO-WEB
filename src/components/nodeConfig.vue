@@ -107,49 +107,22 @@ Date: 2019/9/10 09:00
           <a class="tableOpt">打标签</a>
         </template>
       </el-table-column>
-      <el-table-column
-              prop="nodeName"
-              label="节点名称">
-      </el-table-column>
-      <el-table-column
-              prop="label"
-              label="标签"
-              width="100">
-      </el-table-column>
-      <el-table-column
-              prop="nodeCode"
-              label="节点编码">
-      </el-table-column>
-      <el-table-column
-              prop="nodeType"
-              label="节点类型">
-      </el-table-column>
-      <el-table-column
-              prop="img"
-              label="图标">
-      </el-table-column>
-      <el-table-column
-              prop="size"
-              label="大小">
-      </el-table-column>
-      <el-table-column
-              prop="mutualExclusionGroup"
-              label="所属互斥组">
-      </el-table-column>
-      <el-table-column
-              prop="createTime"
-              label="创建时间">
-      </el-table-column>
+      <el-table-column prop="nodeName" label="节点名称"></el-table-column>
+      <el-table-column prop="label" label="标签" width="100"></el-table-column>
+      <el-table-column prop="nodeCode" label="节点编码"></el-table-column>
+      <el-table-column prop="nodeType" label="节点类型"></el-table-column>
+      <el-table-column prop="img" label="图标"></el-table-column>
+      <el-table-column prop="size" label="大小"></el-table-column>
+      <el-table-column prop="mutualExclusionGroup" label="所属互斥组"></el-table-column>
+      <el-table-column prop="createTime" label="创建时间"></el-table-column>
     </el-table>
     <el-pagination
             style="padding-top: 20px"
             background
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="currentPage4"
+            :current-page=1
             :page-sizes="[100, 200, 300, 400]"
             :page-size="100"
-            layout="total, sizes, prev, pager, next, jumper"
+            layout="prev, pager, next, total,  jumper"
             :total="400">
     </el-pagination>
   </div>
@@ -158,7 +131,7 @@ Date: 2019/9/10 09:00
 <script>
 
     import AFormItem from "ant-design-vue/es/form/FormItem";
-    import {nodeInsert} from "../api/requestManage.js";
+    import {nodeInsert, nodeQueryList} from "../api/requestManage.js";
 
     export default {
         name: "nodeConfig",
