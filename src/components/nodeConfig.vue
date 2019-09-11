@@ -204,12 +204,10 @@ Date: 2019/9/10 09:00
                   if (!err) {
                       console.log('Received values of form: ', values);
                       var result = nodeInsert(values);
-                      //alert(result);
-                      //console.log(result.toString());
-                      result.then((res)=>{alert(res.toString())},(err) => {alert(err)});
+                      result.then((res)=>{this.visible=false;this.$message.success(res.data);});
                   }
               });
-            }
+            },
         }
     }
 </script>
