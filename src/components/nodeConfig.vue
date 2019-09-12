@@ -171,10 +171,10 @@ Date: 2019/9/10 09:00
                 this.insertNodeForm.validateFields((err, values) => {
                     if (!err) {
                         console.log('Received values of form: ', values);
-                        var result = nodeInsert(values);
-                        result.then((res) => {
+                        nodeInsert(values).then((res) => {
                             this.visible = false;
                             this.$message.success(res.data.desc);
+                            this.insertNodeForm.resetFields();
                             this.queryNodePage();
                         });
                     }
