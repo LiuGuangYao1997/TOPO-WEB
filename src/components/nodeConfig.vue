@@ -213,7 +213,7 @@ Date: 2019/9/10 09:00
 <style scoped>
   .nodeConfig {
     background-color: white;
-    width: 85%;
+    width: 100%;
     height: 100%;
     border: 1px solid rgba(169, 169, 169, 0.25);
     padding: 20px;
