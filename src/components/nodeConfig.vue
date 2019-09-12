@@ -10,26 +10,17 @@ Date: 2019/9/10 09:00
     </a-tabs>
     <!-- 表单 -->
     <a-form layout="inline" style="padding-bottom: 20px">
-      <a-form-item>
-        <label>节点名称: </label>
-      </a-form-item>
-      <a-form-item>
+      <a-form-item label="节点名称">
         <a-input v-model="tableAttribute.name" placeholder="模糊匹配"></a-input>
       </a-form-item>
-      <a-form-item>
-        <label>节点编码: </label>
-      </a-form-item>
-      <a-form-item>
+      <a-form-item label="节点编码">
         <a-input v-model="tableAttribute.code" placeholder="模糊匹配"></a-input>
       </a-form-item>
-      <a-form-item>
-        <label>节点类型: </label>
-      </a-form-item>
-      <a-form-item>
+      <a-form-item label="节点类型">
         <a-input v-model="tableAttribute.type" placeholder="默认节点/交换机/路由器......"></a-input>
       </a-form-item>
       <a-form-item>
-        <a-button @click="queryTable" class="formOptBut"><span class="formOptSpan">查询</span></a-button>
+        <a-button @click="queryNodePage" class="formOptBut"><span class="formOptSpan">查询</span></a-button>
       </a-form-item>
       <a-form-item>
         <a-button @click="resetQuery" class="formOptBut"><span class="formOptSpan">重置</span></a-button>
@@ -91,16 +82,15 @@ Date: 2019/9/10 09:00
             :data="tableData"
             size="small"
             border
-            @row-click="rowClick"
             :header-cell-style="{background:'#eef1f6',color:'#606266',textAlign:'center'}"
             :cell-style="{textAlign:'center'}">
       <el-table-column prop="id" label="序号" width="50">
       </el-table-column>
       <el-table-column label="操作" width="180">
-        <template>
+        <template slot-scope="optScope">
           <a class="tableOpt">详情</a>
           <a class="tableOpt">修改</a>
-          <a @click.prevent="setNodeDeleteFlag" class="tableOpt">删除</a>
+          <a @click.prevent="doNodeDelete(optScope.row)" class="tableOpt">删除</a>
           <a class="tableOpt">打标签</a>
         </template>
       </el-table-column>
@@ -121,7 +111,6 @@ Date: 2019/9/10 09:00
             :current-page="tableAttribute.currentPage"
             @current-change="handleCurrentChange"
             layout="prev, pager, next, total, jumper">
-
     </el-pagination>
   </div>
 </template>
@@ -137,16 +126,7 @@ Date: 2019/9/10 09:00
         data() {
             return {
                 tableData: [],
-                tableAttribute: {
-                    pageSize: 5,
-                    currentPage: 1,
-                    total: 10,
-                    name: null,
-                    code: null,
-                    type: null,
-                    sort: null,
-                    filed: null,
-                },
+                tableAttribute: {pageSize: 5, currentPage: 1, total: 10, name: null, code: null, type: null, sort: null, filed: null,},
                 optFlag: null,
                 visible: false,
                 confirmLoading: false,
@@ -154,6 +134,7 @@ Date: 2019/9/10 09:00
             }
         },
         created() {
+            // 当页面加载时获取表格数据
             nodeQueryList({page: 1, perpage: this.tableAttribute.pageSize,}).then(res => {
                 this.tableData = res.data.data.content;
                 this.tableAttribute.total = res.data.data.totalElements;
@@ -166,13 +147,12 @@ Date: 2019/9/10 09:00
             closeInsertView() {
                 this.visible = false;
             },
-            insertNodeSubmit(e) {
-                e.preventDefault();
+            // 提交新增节点表单
+            insertNodeSubmit() {
                 this.insertNodeForm.validateFields((err, values) => {
                     if (!err) {
-                        console.log('Received values of form: ', values);
                         nodeInsert(values).then((res) => {
-                            this.visible = false;
+                            this.closeInsertView();
                             this.$message.success(res.data.desc);
                             this.insertNodeForm.resetFields();
                             this.queryNodePage();
@@ -180,15 +160,14 @@ Date: 2019/9/10 09:00
                     }
                 });
             },
-            queryTable() {
-                this.queryNodePage();
-            },
+            // 重置查询条件
             resetQuery() {
                 this.tableAttribute.name = null;
                 this.tableAttribute.code = null;
                 this.tableAttribute.type = null;
-                this.queryNodePage()
+                this.queryNodePage();
             },
+            // 点击查询按钮或分页按钮的方法
             queryNodePage() {
                 nodeQueryList({
                     page: this.tableAttribute.currentPage, // 页码
@@ -203,13 +182,12 @@ Date: 2019/9/10 09:00
                     this.tableAttribute.total = res.data.data.totalElements;
                 });
             },
+            // 处理选择的页码
             handleCurrentChange(val) {
                 this.tableAttribute.currentPage = val;
                 this.queryNodePage();
             },
-            setNodeDeleteFlag() {
-                this.optFlag = "del";
-            },
+            // 删除节点的方法
             doNodeDelete(row) {
                 this.$confirm("节点Id: " + row.id + ",  节点名: " + row.name, '确定要删除节点?', {
                     confirmButtonText: '确定',
@@ -228,9 +206,6 @@ Date: 2019/9/10 09:00
                     });
                 });
             },
-            rowClick(row, column, event) {
-                this.doNodeDelete(row);
-            }
         }
     }
 </script>
