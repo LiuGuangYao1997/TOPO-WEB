@@ -40,6 +40,7 @@ Date: 2019/9/10 09:00
     </a-form>
 
     <!-- 新增的浮窗及表单 -->
+    <!-- TODO: 设置表单的格式,单元框对齐 -->
     <a-modal title="节点配置" width="600px"
              :visible="visible" @ok="insertNodeSubmit"
              okText="确定"
