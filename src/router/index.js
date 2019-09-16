@@ -19,6 +19,11 @@ export default new Router({
             path: '/nodeConfig',
             name: 'nodeConfig',
             component: () => import('../components/nodeConfig.vue')
+        },
+        {
+            path: '/lineConfig',
+            name: 'lineConfig',
+            component: () => import('../components/lineConfig.vue')
         }
     ]
 })
