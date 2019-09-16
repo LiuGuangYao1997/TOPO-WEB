@@ -194,10 +194,19 @@ Date: 2019/9/10 09:00
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    nodeDelete({id: row.id}).then(res => this.queryNodePage());
-                    this.$message({
-                        type: 'success',
-                        message: '删除成功!'
+                    nodeDelete({id: row.id}).then(res => {
+                        if(res.data.code === 0){
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                            this.queryLinePage();
+                        }else {
+                            this.$message({
+                                type: 'error',
+                                message: res.data.desc
+                            });
+                        }
                     });
                 }).catch(() => {
                     this.$message({
