@@ -20,7 +20,7 @@ Date: 2019/9/10 09:00
         <a-input v-model="tableAttribute.type" placeholder="默认节点/交换机/路由器......"></a-input>
       </a-form-item>
       <a-form-item>
-        <a-button @click="queryNodePage" class="formOptBut"><span class="formOptSpan">查询</span></a-button>
+        <a-button @click="queryNodeFirstPage" class="formOptBut"><span class="formOptSpan">查询</span></a-button>
       </a-form-item>
       <a-form-item>
         <a-button @click="resetQuery" class="formOptBut"><span class="formOptSpan">重置</span></a-button>
@@ -155,7 +155,7 @@ Date: 2019/9/10 09:00
                             this.closeInsertView();
                             this.$message.success(res.data.desc);
                             this.insertNodeForm.resetFields();
-                            this.queryNodePage();
+                            this.queryNodeFirstPage();
                         });
                     }
                 });
@@ -165,9 +165,13 @@ Date: 2019/9/10 09:00
                 this.tableAttribute.name = null;
                 this.tableAttribute.code = null;
                 this.tableAttribute.type = null;
-                this.queryNodePage();
+                this.queryNodeFirstPage();
             },
             // 点击查询按钮或分页按钮的方法
+            queryNodeFirstPage() {
+                this.tableAttribute.currentPage = 1;
+                this.queryNodePage();
+            },
             queryNodePage() {
                 nodeQueryList({
                     page: this.tableAttribute.currentPage, // 页码

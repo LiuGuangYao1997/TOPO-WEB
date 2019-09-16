@@ -17,7 +17,7 @@ Date: 2019/9/16 9:34
         <a-input v-model="tableAttribute.type" placeholder="模糊匹配"></a-input>
       </a-form-item>
       <a-form-item>
-        <a-button @click="queryLinePage" class="formOptBut"><span class="formOptSpan">查询</span></a-button>
+        <a-button @click="queryLineFirstPage" class="formOptBut"><span class="formOptSpan">查询</span></a-button>
       </a-form-item>
       <a-form-item>
         <a-button @click="resetQuery" class="formOptBut"><span class="formOptSpan">重置</span></a-button>
@@ -145,7 +145,7 @@ Date: 2019/9/16 9:34
                             this.closeInsertView();
                             this.$message.success(res.data.desc);
                             this.insertLineForm.resetFields();
-                            this.queryLinePage();
+                            this.queryLineFirstPage();
                         });
                     }
                 });
@@ -154,9 +154,13 @@ Date: 2019/9/16 9:34
             resetQuery() {
                 this.tableAttribute.name = null;
                 this.tableAttribute.type = null;
-                this.queryLinePage();
+                this.queryLineFirstPage();
             },
             // 点击查询按钮或分页按钮的方法
+            queryLineFirstPage() {
+                this.tableAttribute.currentPage = 1;
+                this.queryLinePage();
+            },
             queryLinePage() {
                 lineQueryList({
                     page: this.tableAttribute.currentPage, // 页码
