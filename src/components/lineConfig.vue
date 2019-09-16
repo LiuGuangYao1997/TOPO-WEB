@@ -58,7 +58,7 @@ Date: 2019/9/16 9:34
         </a-form-item>
         <a-form-item label="大小">
           <a-input
-                  v-decorator="['lineSize']"
+                  v-decorator="['size']"
                   placeholder="14"></a-input>
         </a-form-item>
         <a-form-item label="颜色">
@@ -89,7 +89,7 @@ Date: 2019/9/16 9:34
       <el-table-column prop="type" label="连线类型"></el-table-column>
       <el-table-column prop="straightLine" label="曲直线"></el-table-column>
       <el-table-column prop="solidLine" label="虚实线"></el-table-column>
-      <el-table-column prop="lineSize" label="大小"></el-table-column>
+      <el-table-column prop="size" label="大小"></el-table-column>
       <el-table-column prop="color" label="连线颜色"></el-table-column>
       <el-table-column prop="createTime" label="创建时间"></el-table-column>
     </el-table>
@@ -182,10 +182,19 @@ Date: 2019/9/16 9:34
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    lineDelete({id: row.id}).then(res => this.queryLinePage());
-                    this.$message({
-                        type: 'success',
-                        message: '删除成功!'
+                    lineDelete({id: row.id}).then(res => {
+                        if(res.data.code === 0){
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                            this.queryLinePage();
+                        }else {
+                            this.$message({
+                                type: 'error',
+                                message: res.data.desc
+                            });
+                        }
                     });
                 }).catch(() => {
                     this.$message({
