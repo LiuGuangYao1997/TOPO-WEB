@@ -98,6 +98,7 @@ Date: 2019/9/10 09:00
       <el-table-column prop="label" label="标签" width="100"></el-table-column>
       <el-table-column prop="code" label="节点编码"></el-table-column>
       <el-table-column prop="type" label="节点类型"></el-table-column>
+      <!-- TODO: 图标显示为图形 -->
       <el-table-column prop="iconUrl" label="图标"></el-table-column>
       <el-table-column prop="size" label="大小"></el-table-column>
       <el-table-column prop="mutex" label="所属互斥组"></el-table-column>
