@@ -7,10 +7,7 @@
 
 import {get, post} from './api'
 
-export const demoGet = data => get('/modelManage/pageFindMmSpecAttribute', data);
-export const demoPost = data => post('/modelManage/pageFindMmSpecAttribute', data);
-
-// TOPO接口(本地测试)
+// TOPO接口
 
 // 新增节点接口
 export const nodeInsert = data => post('/node/newNodeConfig', data);
@@ -25,3 +22,6 @@ export const lineQueryList = data => post('/line/findLineConfigByPage', data);
 export const lineInsert = data => post('/line/newLineConfig', data);
 // 删除连线接口
 export const lineDelete = data => post('/line/delLineConfig', data);
+
+// 查询菜单项列表接口
+export const menuItemQueryList = data => post('/Menu/findMenuItemByPage', data);
