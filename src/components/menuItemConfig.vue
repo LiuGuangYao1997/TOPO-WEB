@@ -46,7 +46,7 @@ Date: 2019/9/16 14:45
             </a-form-item>
             <a-form-item :wrapperCol="{span: 10, offset: 8}">
               <a-button type="primary" html-type="submit">保存</a-button>
-              <a-button html-type="reset">重置</a-button>
+              <a-button @click="resetForm">重置</a-button>
             </a-form-item>
           </a-form>
         </a-col>
@@ -60,7 +60,7 @@ Date: 2019/9/16 14:45
     import ARow from "ant-design-vue/es/grid/Row";
     import ACol from "ant-design-vue/es/grid/Col";
     import AFormItem from "ant-design-vue/es/form/FormItem";
-    import {menuItemQueryList, menuItemInsert, menuItemDelete, menuItemUpdate} from "../api/requestManage.js";
+    import {menuItemQueryList, menuItemInsert, menuItemDelete, menuItemUpdate, menuItemQueryById} from "../api/requestManage.js";
 
     const customTreeData = [];
     const sysTreeData = [];
@@ -115,6 +115,11 @@ Date: 2019/9/16 14:45
                         <span>{node.label}</span>
                         </a-popover>
                         </span>);
+                }else if(data.id === 'sysMenuItems'){ // 当节点为父系统菜单时
+                    return (
+                        <span class="custom-tree-node">
+                        <span>{node.label}</span>
+                        </span>);
                 }else if (data.type !== 'sys'){ //当节点为非系统菜单时
                     return (
                         <span class="custom-tree-node">
@@ -147,7 +152,6 @@ Date: 2019/9/16 14:45
                 e.preventDefault();
                 this.menuItemForm.validateFields((err, values) => {
                     if (!err) {
-                        console.log('Received values of form: ', values);
                         if (this.selectMenuItemId == null){
                             menuItemInsert(values).then((res) => {
                                 if (res.data.code != 0){
@@ -158,12 +162,37 @@ Date: 2019/9/16 14:45
                                     this.getMenuItemTree();
                                 }
                             });
+                        }else {
+                            values.id = this.selectMenuItemId;
+                            menuItemUpdate(values).then((res) => {
+                                if (res.data.code != 0){
+                                    this.$message.error(res.data.desc);
+                                }else {
+                                    this.$message.success(res.data.desc);
+                                    this.selectMenuItemId=null;
+                                    this.menuItemForm.resetFields();
+                                    this.getMenuItemTree();
+                                }
+                            });
                         }
                     }
                 });
             },
+            // 当点击修改按钮时
             updateMenuItem(id) {
-                alert("update: " + id)
+                this.selectMenuItemId = id;
+                // 查询并填充表单元素
+                menuItemQueryById({id: id}).then(res => {
+                    this.menuItemForm.setFieldsValue({
+                        name: res.data.data.name,
+                        code: res.data.data.code,
+                        url: res.data.data.url,
+                        exeType: res.data.data.exeType,
+                        winHeight: res.data.data.winHeight,
+                        winWidth: res.data.data.winWidth
+                    });
+
+                })
             },
             deleteMenuItem(id, label) {
                 this.$confirm("菜单项Id: " + id + ",  菜单项名: " + label, '确定要删除菜单项?', {
@@ -191,6 +220,10 @@ Date: 2019/9/16 14:45
                         message: '已取消删除'
                     });
                 });
+            },
+            resetForm(){
+                this.menuItemForm.resetFields();
+                this.selectMenuItemId=null;
             },
         },
     }
