@@ -45,7 +45,7 @@ Date: 2019/9/16 14:45
               <a-input v-decorator="['winWidth']"></a-input>
             </a-form-item>
             <a-form-item :wrapperCol="{span: 10, offset: 8}">
-              <a-button type="primary" html-type="submit">提交</a-button>
+              <a-button type="primary" html-type="submit">保存</a-button>
               <a-button html-type="reset">重置</a-button>
             </a-form-item>
           </a-form>
@@ -60,7 +60,7 @@ Date: 2019/9/16 14:45
     import ARow from "ant-design-vue/es/grid/Row";
     import ACol from "ant-design-vue/es/grid/Col";
     import AFormItem from "ant-design-vue/es/form/FormItem";
-    import {menuItemQueryList} from "../api/requestManage.js";
+    import {menuItemQueryList, menuItemInsert, menuItemDelete, menuItemUpdate} from "../api/requestManage.js";
 
     const customTreeData = [];
     const sysTreeData = [];
@@ -86,17 +86,21 @@ Date: 2019/9/16 14:45
             return {
                 treeData,
                 menuItemForm: this.$form.createForm(this),
+                selectMenuItemId:null
             }
         },
         methods: {
-            // 提交表单
-            handleSubmit(e) {
-                e.preventDefault();
-                this.menuItemForm.validateFields((err, values) => {
-                    if (!err) {
-                        console.log('Received values of form: ', values);
+            //重新加载树形菜单内容
+            getMenuItemTree(){
+                menuItemQueryList({page: 1, perpage: 100}).then(res => {
+                    customTreeData.length=0;
+                    for (let item of res.data.data.content) {
+                        let menuItem = {id: item.id, label: item.name, type: item.type};
+                        if (item.type !== 'sys') {
+                            customTreeData.push(menuItem);
+                        }
                     }
-                });
+                })
             },
             // 渲染树形菜单
             renderContent(h, { node, data, store }) {
@@ -104,7 +108,7 @@ Date: 2019/9/16 14:45
                 if (data.id === 'customMenuItems') {
                     return (
                         <span class="custom-tree-node">
-                        <a-popover trigger="click">
+                        <a-popover trigger="hover">
                         <template slot="content">
                         <a-button size="small" on-click={()=> this.insertMenuItem()}>新增</a-button>
                         </template>
@@ -114,7 +118,7 @@ Date: 2019/9/16 14:45
                 }else if (data.type !== 'sys'){ //当节点为非系统菜单时
                     return (
                         <span class="custom-tree-node">
-                        <a-popover trigger="click">
+                        <a-popover trigger="hover">
                         <template slot="content">
                           <a-row>
                             <a-button size="small" on-click={() => this.updateMenuItem(data.id)}>修改</a-button>
@@ -133,8 +137,30 @@ Date: 2019/9/16 14:45
                         </span>);
                 }
             },
+            // 当点击新增按钮时,清空表单,清空selectMenuItemId的值
             insertMenuItem() {
-                alert("insert")
+                this.menuItemForm.resetFields();
+                this.selectMenuItemId = null;
+            },
+            // 提交表单
+            handleSubmit(e) {
+                e.preventDefault();
+                this.menuItemForm.validateFields((err, values) => {
+                    if (!err) {
+                        console.log('Received values of form: ', values);
+                        if (this.selectMenuItemId == null){
+                            menuItemInsert(values).then((res) => {
+                                if (res.data.code != 0){
+                                    this.$message.error(res.data.desc);
+                                }else {
+                                    this.$message.success(res.data.desc);
+                                    this.menuItemForm.resetFields();
+                                    this.getMenuItemTree();
+                                }
+                            });
+                        }
+                    }
+                });
             },
             updateMenuItem(id) {
                 alert("update: " + id)
