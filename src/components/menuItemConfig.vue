@@ -17,13 +17,35 @@ Date: 2019/9/16 14:45
           <!-- 菜单项-树形控件 -->
           <div class="menuItemTree">
             <a-tree
+                    defaultExpandAll
                     :treeData="treeData"
             />
           </div>
         </a-col>
         <a-col :span="16">
-          <a-form>
-            <a-form-item></a-form-item>
+          <a-form :form="menuItemForm" layout="horizontal" @submit="handleSubmit">
+            <a-form-item label="菜单名称" :labelCol="{span: 6}" :wrapperCol="{span: 10, offset: 1}">
+              <a-input placeholder="模糊匹配" v-decorator="['name']" ></a-input>
+            </a-form-item>
+            <a-form-item label="菜单编码" :labelCol="{span: 6}" :wrapperCol="{span: 10, offset: 1}">
+              <a-input placeholder="编码" v-decorator="['code']" ></a-input>
+            </a-form-item>
+            <a-form-item label="URL" :labelCol="{span: 6}" :wrapperCol="{span: 10, offset: 1}">
+              <a-input placeholder="http://xxxxx" v-decorator="['url']" ></a-input>
+            </a-form-item>
+            <a-form-item label="打开方式" :labelCol="{span: 6}" :wrapperCol="{span: 10, offset: 1}">
+              <a-input placeholder="弹窗/新窗口/二次开发" v-decorator="['exeType']" ></a-input>
+            </a-form-item>
+            <a-form-item label="弹窗高" :labelCol="{span: 6}" :wrapperCol="{span: 10, offset: 1}">
+              <a-input v-decorator="['winHeight']" ></a-input>
+            </a-form-item>
+            <a-form-item label="弹窗宽" :labelCol="{span: 6}" :wrapperCol="{span: 10, offset: 1}">
+              <a-input v-decorator="['winWidth']" ></a-input>
+            </a-form-item>
+            <a-form-item>
+              <a-button type="primary" html-type="submit">提交</a-button>
+              <a-button html-type="reset">重置</a-button>
+            </a-form-item>
           </a-form>
         </a-col>
       </a-row>
@@ -50,18 +72,31 @@ Date: 2019/9/16 14:45
             menuItemQueryList({page:1, perpage:100}).then(res => {
                 for (let item of res.data.data.content){
                     let menuItem = {key:item.id, title: item.name};
-                    sysTreeData.push(menuItem);
+                    if (item.type === 'sys'){
+                        sysTreeData.push(menuItem);
+                    }else {
+                        customTreeData.push(menuItem);
+                    }
                 }
             })
         },
         data () {
             return {
                 treeData,
+                menuItemForm: this.$form.createForm(this),
             }
         },
         methods: {
             onSelect (selectedKeys, info) {
                 this.selectedKeys = selectedKeys
+            },
+            handleSubmit(e){
+                e.preventDefault();
+                this.form.validateFields((err, values) => {
+                    if (!err) {
+                        console.log('Received values of form: ', values);
+                    }
+                });
             },
         },
     }
