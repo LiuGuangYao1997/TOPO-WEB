@@ -16,32 +16,33 @@ Date: 2019/9/16 14:45
         <a-col :span="8">
           <!-- 菜单项-树形控件 -->
           <div class="menuItemTree">
-            <a-tree
+            <el-tree
+                    :expand-on-click-node=false
                     defaultExpandAll
-                    :treeData="treeData"
-                    @rightClick="menuItemRightClick"
-            />
+                    :data="treeData"
+                    :render-content="renderContent">
+            </el-tree>
           </div>
         </a-col>
         <a-col :span="16">
           <a-form :form="menuItemForm" layout="horizontal" @submit="handleSubmit">
             <a-form-item label="菜单名称" :labelCol="{span: 6}" :wrapperCol="{span: 10, offset: 1}">
-              <a-input placeholder="模糊匹配" v-decorator="['name']" ></a-input>
+              <a-input placeholder="模糊匹配" v-decorator="['name']"></a-input>
             </a-form-item>
             <a-form-item label="菜单编码" :labelCol="{span: 6}" :wrapperCol="{span: 10, offset: 1}">
-              <a-input placeholder="编码" v-decorator="['code']" ></a-input>
+              <a-input placeholder="编码" v-decorator="['code']"></a-input>
             </a-form-item>
             <a-form-item label="URL" :labelCol="{span: 6}" :wrapperCol="{span: 10, offset: 1}">
-              <a-input placeholder="http://xxxxx" v-decorator="['url']" ></a-input>
+              <a-input placeholder="http://xxxxx" v-decorator="['url']"></a-input>
             </a-form-item>
             <a-form-item label="打开方式" :labelCol="{span: 6}" :wrapperCol="{span: 10, offset: 1}">
-              <a-input placeholder="弹窗/新窗口/二次开发" v-decorator="['exeType']" ></a-input>
+              <a-input placeholder="弹窗/新窗口/二次开发" v-decorator="['exeType']"></a-input>
             </a-form-item>
             <a-form-item label="弹窗高" :labelCol="{span: 6}" :wrapperCol="{span: 10, offset: 1}">
-              <a-input v-decorator="['winHeight']" ></a-input>
+              <a-input v-decorator="['winHeight']"></a-input>
             </a-form-item>
             <a-form-item label="弹窗宽" :labelCol="{span: 6}" :wrapperCol="{span: 10, offset: 1}">
-              <a-input v-decorator="['winWidth']" ></a-input>
+              <a-input v-decorator="['winWidth']"></a-input>
             </a-form-item>
             <a-form-item :wrapperCol="{span: 10, offset: 8}">
               <a-button type="primary" html-type="submit">提交</a-button>
@@ -63,25 +64,25 @@ Date: 2019/9/16 14:45
 
     const customTreeData = [];
     const sysTreeData = [];
-    const treeData = [{key:'1', title:'自定义菜单项', children:customTreeData},
-        {key:'2', title:'系统菜单', children:sysTreeData}
+    const treeData = [{key: 'customMenuItems', label: '自定义菜单项', children: customTreeData},
+        {key: 'sysMenuItems', label: '系统菜单', children: sysTreeData}
     ];
     export default {
         name: "menuItemConfig",
         components: {AFormItem, ACol, ARow},
-        created () {
-            menuItemQueryList({page:1, perpage:100}).then(res => {
-                for (let item of res.data.data.content){
-                    let menuItem = {key:item.id, title: item.name, type: item.type};
-                    if (item.type === 'sys'){
+        created() {
+            menuItemQueryList({page: 1, perpage: 100}).then(res => {
+                for (let item of res.data.data.content) {
+                    let menuItem = {key: item.id, label: item.name, type: item.type};
+                    if (item.type === 'sys') {
                         sysTreeData.push(menuItem);
-                    }else {
+                    } else {
                         customTreeData.push(menuItem);
                     }
                 }
             })
         },
-        data () {
+        data() {
             return {
                 treeData,
                 menuItemForm: this.$form.createForm(this),
@@ -89,7 +90,7 @@ Date: 2019/9/16 14:45
         },
         methods: {
             // 提交表单
-            handleSubmit(e){
+            handleSubmit(e) {
                 e.preventDefault();
                 this.menuItemForm.validateFields((err, values) => {
                     if (!err) {
@@ -97,13 +98,37 @@ Date: 2019/9/16 14:45
                     }
                 });
             },
-            //当菜单项被右键点击时
-            menuItemRightClick({event, node}){
-                //alert(node.dataRef.key + " " + node.dataRef.type);
-                if (node.dataRef.type !== 'sys'){
-                    // 如果是非系统菜单,则弹出操作浮窗
+            // 渲染树形菜单
+            renderContent(h, { node, data, store }) {
+                // 当节点为自定义菜单时
+                if (data.key === 'customMenuItems') {
+                    return (
+                        <span class="custom-tree-node">
+                        <a-popover trigger="click">
+                        <template slot="content">
+                        <p>新增</p>
+                        </template>
+                        <span>{node.label}</span>
+                        </a-popover>
+                        </span>);
+                }else if (data.type !== 'sys'){ //当节点为非系统菜单时
+                    return (
+                        <span class="custom-tree-node">
+                        <a-popover trigger="click">
+                        <template slot="content">
+                        <p>修改</p>
+                        <p>删除</p>
+                        </template>
+                        <span>{node.label}</span>
+                        </a-popover>
+                        </span>);
+                }else { //当节点为系统菜单时
+                    return (
+                        <span class="custom-tree-node">
+                        <span>{node.label}</span>
+                        </span>);
                 }
-            },
+            }
         },
     }
 </script>
