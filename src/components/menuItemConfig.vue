@@ -64,8 +64,8 @@ Date: 2019/9/16 14:45
 
     const customTreeData = [];
     const sysTreeData = [];
-    const treeData = [{key: 'customMenuItems', label: '自定义菜单项', children: customTreeData},
-        {key: 'sysMenuItems', label: '系统菜单', children: sysTreeData}
+    const treeData = [{id: 'customMenuItems', label: '自定义菜单项', children: customTreeData},
+        {id: 'sysMenuItems', label: '系统菜单', children: sysTreeData}
     ];
     export default {
         name: "menuItemConfig",
@@ -73,7 +73,7 @@ Date: 2019/9/16 14:45
         created() {
             menuItemQueryList({page: 1, perpage: 100}).then(res => {
                 for (let item of res.data.data.content) {
-                    let menuItem = {key: item.id, label: item.name, type: item.type};
+                    let menuItem = {id: item.id, label: item.name, type: item.type};
                     if (item.type === 'sys') {
                         sysTreeData.push(menuItem);
                     } else {
@@ -101,12 +101,12 @@ Date: 2019/9/16 14:45
             // 渲染树形菜单
             renderContent(h, { node, data, store }) {
                 // 当节点为自定义菜单时
-                if (data.key === 'customMenuItems') {
+                if (data.id === 'customMenuItems') {
                     return (
                         <span class="custom-tree-node">
                         <a-popover trigger="click">
                         <template slot="content">
-                        <p>新增</p>
+                        <a-button on-click={()=> this.insertMenuItem()}>新增</a-button>
                         </template>
                         <span>{node.label}</span>
                         </a-popover>
@@ -116,8 +116,8 @@ Date: 2019/9/16 14:45
                         <span class="custom-tree-node">
                         <a-popover trigger="click">
                         <template slot="content">
-                        <p>修改</p>
-                        <p>删除</p>
+                        <p on-click={() => this.updateMenuItem(data.id)}>修改</p>
+                        <p on-click={() => this.deleteMenuItem(data.id)}>删除</p>
                         </template>
                         <span>{node.label}</span>
                         </a-popover>
@@ -128,7 +128,16 @@ Date: 2019/9/16 14:45
                         <span>{node.label}</span>
                         </span>);
                 }
-            }
+            },
+            insertMenuItem() {
+                alert("insert")
+            },
+            updateMenuItem(id) {
+                alert("update: " + id)
+            },
+            deleteMenuItem(id) {
+                alert("delete: " + id)
+            },
         },
     }
 </script>
