@@ -19,6 +19,7 @@ Date: 2019/9/16 14:45
             <a-tree
                     defaultExpandAll
                     :treeData="treeData"
+                    @rightClick="menuItemRightClick"
             />
           </div>
         </a-col>
@@ -42,7 +43,7 @@ Date: 2019/9/16 14:45
             <a-form-item label="弹窗宽" :labelCol="{span: 6}" :wrapperCol="{span: 10, offset: 1}">
               <a-input v-decorator="['winWidth']" ></a-input>
             </a-form-item>
-            <a-form-item>
+            <a-form-item :wrapperCol="{span: 10, offset: 8}">
               <a-button type="primary" html-type="submit">提交</a-button>
               <a-button html-type="reset">重置</a-button>
             </a-form-item>
@@ -71,7 +72,7 @@ Date: 2019/9/16 14:45
         created () {
             menuItemQueryList({page:1, perpage:100}).then(res => {
                 for (let item of res.data.data.content){
-                    let menuItem = {key:item.id, title: item.name};
+                    let menuItem = {key:item.id, title: item.name, type: item.type};
                     if (item.type === 'sys'){
                         sysTreeData.push(menuItem);
                     }else {
@@ -87,16 +88,21 @@ Date: 2019/9/16 14:45
             }
         },
         methods: {
-            onSelect (selectedKeys, info) {
-                this.selectedKeys = selectedKeys
-            },
+            // 提交表单
             handleSubmit(e){
                 e.preventDefault();
-                this.form.validateFields((err, values) => {
+                this.menuItemForm.validateFields((err, values) => {
                     if (!err) {
                         console.log('Received values of form: ', values);
                     }
                 });
+            },
+            //当菜单项被右键点击时
+            menuItemRightClick({event, node}){
+                //alert(node.dataRef.key + " " + node.dataRef.type);
+                if (node.dataRef.type !== 'sys'){
+                    // 如果是非系统菜单,则弹出操作浮窗
+                }
             },
         },
     }
