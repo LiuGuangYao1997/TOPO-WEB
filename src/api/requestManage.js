@@ -25,3 +25,9 @@ export const lineDelete = data => post('/line/delLineConfig', data);
 
 // 查询菜单项列表接口
 export const menuItemQueryList = data => post('/Menu/findMenuItemByPage', data);
+// 新增菜单项接口
+export const menuItemInsert = data => post('/Menu/newMenuItem', data);
+// 修改菜单项接口
+export const menuItemUpdate = data => post('/Menu/updateMenuItem', data);
+// 删除菜单项接口
+export const menuItemDelete = data => post('/Menu/delMenuItem', data);
