@@ -124,7 +124,7 @@ Date: 2019/9/16 14:45
                             <a-button size="small" on-click={() => this.updateMenuItem(data.id)}>修改</a-button>
                           </a-row>
                           <a-row>
-                            <a-button size="small" on-click={() => this.deleteMenuItem(data.id)}>删除</a-button>
+                            <a-button size="small" on-click={() => this.deleteMenuItem(data.id, data.label)}>删除</a-button>
                           </a-row>
                         </template>
                         <span>{node.label}</span>
@@ -165,8 +165,32 @@ Date: 2019/9/16 14:45
             updateMenuItem(id) {
                 alert("update: " + id)
             },
-            deleteMenuItem(id) {
-                alert("delete: " + id)
+            deleteMenuItem(id, label) {
+                this.$confirm("菜单项Id: " + id + ",  菜单项名: " + label, '确定要删除菜单项?', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    menuItemDelete({id: id}).then(res => {
+                        if(res.data.code === 0){
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                            this.getMenuItemTree();
+                        }else {
+                            this.$message({
+                                type: 'error',
+                                message: res.data.desc
+                            });
+                        }
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
         },
     }
