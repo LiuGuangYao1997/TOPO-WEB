@@ -106,7 +106,7 @@ Date: 2019/9/16 14:45
                         <span class="custom-tree-node">
                         <a-popover trigger="click">
                         <template slot="content">
-                        <a-button on-click={()=> this.insertMenuItem()}>新增</a-button>
+                        <a-button size="small" on-click={()=> this.insertMenuItem()}>新增</a-button>
                         </template>
                         <span>{node.label}</span>
                         </a-popover>
@@ -116,8 +116,12 @@ Date: 2019/9/16 14:45
                         <span class="custom-tree-node">
                         <a-popover trigger="click">
                         <template slot="content">
-                        <p on-click={() => this.updateMenuItem(data.id)}>修改</p>
-                        <p on-click={() => this.deleteMenuItem(data.id)}>删除</p>
+                          <a-row>
+                            <a-button size="small" on-click={() => this.updateMenuItem(data.id)}>修改</a-button>
+                          </a-row>
+                          <a-row>
+                            <a-button size="small" on-click={() => this.deleteMenuItem(data.id)}>删除</a-button>
+                          </a-row>
                         </template>
                         <span>{node.label}</span>
                         </a-popover>
