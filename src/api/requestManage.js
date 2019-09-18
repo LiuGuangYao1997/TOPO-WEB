@@ -33,3 +33,14 @@ export const menuItemUpdate = data => post('/Menu/updateMenuItem', data);
 export const menuItemDelete = data => post('/Menu/delMenuItem', data);
 // 查询菜单项详情接口
 export const menuItemQueryById = data => post('Menu/findMenuItemById', data);
+
+// 查询菜单列表接口
+export const menuConfigQueryList = data => post('/Menu/findMenuConfigByPage', data);
+// 新增菜单接口
+export const menuConfigInsert = data => post('/Menu/newMenuConfig', data);
+// 修改菜单接口
+export const menuConfigUpdate = data => post('/Menu/updateMenuConfig', data);
+// 删除菜单项接口
+export const menuConfigDelete = data => post('/Menu/delMenuConfig', data);
+// 查询菜单详情接口
+export const menuConfigQueryById = data => post('/Menu/findMenuConfigById', data);
