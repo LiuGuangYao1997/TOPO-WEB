@@ -60,7 +60,7 @@ Date: 2019/9/16 14:45
     import ARow from "ant-design-vue/es/grid/Row";
     import ACol from "ant-design-vue/es/grid/Col";
     import AFormItem from "ant-design-vue/es/form/FormItem";
-    import {menuItemQueryList, menuItemInsert, menuItemDelete, menuItemUpdate, menuItemQueryById} from "../api/requestManage.js";
+    import {menuItemQueryList, menuItemInsert, menuItemDelete, menuItemUpdate, menuItemQueryById, getMenuItemTree} from "../api/requestManage.js";
 
     const customTreeData = [];
     const sysTreeData = [];
@@ -71,16 +71,13 @@ Date: 2019/9/16 14:45
         name: "menuItemConfig",
         components: {AFormItem, ACol, ARow},
         created() {
-            menuItemQueryList({page: 1, perpage: 100}).then(res => {
-                for (let item of res.data.data.content) {
-                    let menuItem = {id: item.id, label: item.name, type: item.type};
-                    if (item.type === 'sys') {
-                        sysTreeData.push(menuItem);
-                    } else {
-                        customTreeData.push(menuItem);
-                    }
+            getMenuItemTree().then(res => {
+                if (res.data.code == 0){
+                    this.treeData = res.data.data
+                } else {
+                    this.$message.error("加载菜单项树时发生异常");
                 }
-            })
+            });
         },
         data() {
             return {
@@ -91,16 +88,14 @@ Date: 2019/9/16 14:45
         },
         methods: {
             //重新加载树形菜单内容
-            getMenuItemTree(){
-                menuItemQueryList({page: 1, perpage: 100}).then(res => {
-                    customTreeData.length=0;
-                    for (let item of res.data.data.content) {
-                        let menuItem = {id: item.id, label: item.name, type: item.type};
-                        if (item.type !== 'sys') {
-                            customTreeData.push(menuItem);
-                        }
+            refreshMenuItemTree(){
+                getMenuItemTree().then(res => {
+                    if (res.data.code == 0){
+                        this.treeData = res.data.data
+                    } else {
+                        this.$message.error("加载菜单项树时发生异常");
                     }
-                })
+                });
             },
             // 渲染树形菜单
             renderContent(h, { node, data, store }) {
@@ -111,10 +106,10 @@ Date: 2019/9/16 14:45
                         <a-popover trigger="hover">
                         <template slot="content">
                         <a-button size="small" on-click={()=> this.insertMenuItem()}>新增</a-button>
-                        </template>
-                        <span>{node.label}</span>
-                        </a-popover>
-                        </span>);
+                    </template>
+                    <span>{node.label}</span>
+                    </a-popover>
+                    </span>);
                 }else if(data.id === 'sysMenuItems'){ // 当节点为父系统菜单时
                     return (
                         <span class="custom-tree-node">
@@ -125,16 +120,16 @@ Date: 2019/9/16 14:45
                         <span class="custom-tree-node">
                         <a-popover trigger="hover">
                         <template slot="content">
-                          <a-row>
-                            <a-button size="small" on-click={() => this.updateMenuItem(data.id)}>修改</a-button>
-                          </a-row>
-                          <a-row>
-                            <a-button size="small" on-click={() => this.deleteMenuItem(data.id, data.label)}>删除</a-button>
-                          </a-row>
-                        </template>
-                        <span>{node.label}</span>
-                        </a-popover>
-                        </span>);
+                        <a-row>
+                        <a-button size="small" on-click={() => this.updateMenuItem(data.id)}>修改</a-button>
+                    </a-row>
+                    <a-row>
+                    <a-button size="small" on-click={() => this.deleteMenuItem(data.id, data.label)}>删除</a-button>
+                    </a-row>
+                    </template>
+                    <span>{node.label}</span>
+                    </a-popover>
+                    </span>);
                 }else { //当节点为系统菜单时
                     return (
                         <span class="custom-tree-node">
@@ -159,7 +154,7 @@ Date: 2019/9/16 14:45
                                 }else {
                                     this.$message.success(res.data.desc);
                                     this.menuItemForm.resetFields();
-                                    this.getMenuItemTree();
+                                    this.refreshMenuItemTree();
                                 }
                             });
                         }else {
@@ -171,7 +166,7 @@ Date: 2019/9/16 14:45
                                     this.$message.success(res.data.desc);
                                     this.selectMenuItemId=null;
                                     this.menuItemForm.resetFields();
-                                    this.getMenuItemTree();
+                                    this.refreshMenuItemTree();
                                 }
                             });
                         }
@@ -206,7 +201,7 @@ Date: 2019/9/16 14:45
                                 type: 'success',
                                 message: '删除成功!'
                             });
-                            this.getMenuItemTree();
+                            this.refreshMenuItemTree();
                         }else {
                             this.$message({
                                 type: 'error',
