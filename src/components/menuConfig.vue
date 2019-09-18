@@ -15,6 +15,14 @@ Date: 2019/9/18 9:55
     <a-row>
       <a-col>
         <!-- 树形组件 -->
+        <div class="menuItemTree">
+          <el-tree
+                  :expand-on-click-node=false
+                  defaultExpandAll
+                  :data="treeData"
+                  :render-content="renderContent">
+          </el-tree>
+        </div>
       </a-col>
       <a-col>
         <a-row>
@@ -32,7 +40,21 @@ Date: 2019/9/18 9:55
     import ARow from "ant-design-vue/es/grid/Row";
     export default {
         name: "menuConfig",
-        components: {ARow}
+        components: {ARow},
+        created() {
+
+        },
+        data () {
+            return {
+                treeData: [],
+            }
+        },
+        methods: {
+            renderContent(){
+
+            },
+
+        }
     }
 </script>
 
