@@ -9,6 +9,7 @@ Date: 2019/9/10 09:00
       <a-button @click="open('/nodeConfig')">节点配置</a-button>
       <a-button @click="open('/lineConfig')">连线配置</a-button>
       <a-button @click="open('/menuItemConfig')">菜单项配置</a-button>
+      <a-button @click="open('/menuConfig')">菜单配置</a-button>
     </div>
     <router-view></router-view>
   </div>

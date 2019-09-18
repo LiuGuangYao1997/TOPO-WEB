@@ -29,6 +29,11 @@ export default new Router({
             path: '/menuItemConfig',
             name: 'menuItemConfig',
             component: () => import('../components/menuItemConfig.vue')
+        },
+        {
+            path: '/menuConfig',
+            name: 'menuConfig',
+            component: () => import('../components/menuConfig.vue')
         }
     ]
 })
