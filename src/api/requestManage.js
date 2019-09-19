@@ -38,3 +38,7 @@ export const getMenuItemTree = data => post('/Menu/getMenuItemTree', data);
 
 // 查询菜单树接口
 export const getMenuTree = data => post('/Menu/getMenuTree', data);
+// 查询节点类型接口
+export const getNodeTypeList = data => post('/node/getNodeTypeList', data);
+// 查询连线类型接口
+export const getLineTypeList = data => post('/line/getLineTypeList', data);

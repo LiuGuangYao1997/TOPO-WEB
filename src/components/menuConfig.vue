@@ -32,9 +32,12 @@ Date: 2019/9/18 9:55
               <a-input disabled placeholder="空白区域/节点/连线"  v-decorator="['type']"></a-input>
             </a-form-item>
             <a-form-item label="对象分类">
-              <a-select defaultValue="默认" style="width: 120px" >
+              <a-select style="width: 120px" v-decorator="['objClass']">
                 <a-select-option v-for="objClass in objClassData" :key="objClass">{{objClass}}</a-select-option>
               </a-select>
+            </a-form-item>
+            <a-form-item>
+              <a-button type="primary" html-type="submit">保存</a-button>
             </a-form-item>
           </a-form>
         </a-row>
@@ -48,7 +51,7 @@ Date: 2019/9/18 9:55
 
 <script>
     import ARow from "ant-design-vue/es/grid/Row";
-    import {getMenuTree} from "../api/requestManage.js";
+    import {getMenuTree, getNodeTypeList, getLineTypeList} from "../api/requestManage.js";
     import AFormItem from "ant-design-vue/es/form/FormItem";
 
     export default {
@@ -107,17 +110,26 @@ Date: 2019/9/18 9:55
             },
             insertMenu(id){
                 if (id === 'blankAreaMenu') {
-                  this.insertFrom.setFieldsValue({
-                      type: '空白区域菜单'
-                  })
+                  this.insertFrom.setFieldsValue({type: '空白区域菜单', objClass: ''});
+                  this.objClassData= ['默认'];
                 } else if (id === 'nodeRightClickMenu') {
-                    this.insertFrom.setFieldsValue({
-                        type: '节点右键菜单'
-                    })
+                    this.insertFrom.setFieldsValue({type: '节点右键菜单', objClass: ''});
+                    getNodeTypeList().then(res => {
+                        if (res.data.code != 0){
+                            this.$message.error(res.data.desc);
+                        } else {
+                            this.objClassData = res.data.data;
+                        }
+                    });
                 } else if (id === 'lineRightClickMenu') {
-                    this.insertFrom.setFieldsValue({
-                        type: '连线右键菜单'
-                    })
+                    this.insertFrom.setFieldsValue({type: '连线右键菜单', objClass: ''});
+                    getLineTypeList().then(res => {
+                        if (res.data.code != 0){
+                            this.$message.error(res.data.desc);
+                        } else {
+                            this.objClassData = res.data.data;
+                        }
+                    });
                 }
             },
             handleSubmit(){},
