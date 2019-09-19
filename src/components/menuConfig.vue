@@ -45,7 +45,9 @@ Date: 2019/9/18 9:55
           <!-- 穿梭框 -->
           <a-transfer
             :dataSource="menuItemList"
+            :targetKeys="selectMenuItemList"
             :render="item=>item.title"
+            @change="handleChange"
             :listStyle="{width:'300px', height: '400px'}"
           ></a-transfer>
         </a-row>
@@ -61,7 +63,10 @@ Date: 2019/9/18 9:55
         getNodeTypeList,
         getLineTypeList,
         deleteMenuConfig,
-        getMenuItemMapList
+        getMenuItemMapList,
+        getMenuItemsByMenuId,
+        delMenuRelation,
+        saveMenuRelation,
     } from "../api/requestManage.js";
     import AFormItem from "ant-design-vue/es/form/FormItem";
 
@@ -88,8 +93,10 @@ Date: 2019/9/18 9:55
             return {
                 treeData: [],
                 insertFrom: this.$form.createForm(this),
-                objClassData:['默认'],
+                objClassData:[],
                 menuItemList: [],
+                selectMenuItemList:[],
+                selectMenuId:null,
             }
         },
         methods: {
@@ -109,7 +116,7 @@ Date: 2019/9/18 9:55
                         <span class="custom-tree-node">
                         <a-popover trigger="hover">
                         <template slot="content">
-                        <a-button size="small" on-click={()=> this.insertMenuItem()}>修改</a-button>
+                        <a-button size="small" on-click={()=> this.getSelectMenuItem(data.id)}>修改</a-button>
                     </template>
                     <span>{node.label}</span>
                     </a-popover>
@@ -119,7 +126,7 @@ Date: 2019/9/18 9:55
                         <span class="custom-tree-node">
                         <a-popover trigger="hover">
                         <template slot="content">
-                        <a-button size="small" on-click={()=> this.insertMenuItem()}>修改</a-button>
+                        <a-button size="small" on-click={()=> this.getSelectMenuItem(data.id)}>修改</a-button>
                         <a-button size="small" on-click={()=> this.deleteMenu(data.id, data.label)}>删除</a-button>
                     </template>
                     <span>{node.label}</span>
@@ -156,7 +163,7 @@ Date: 2019/9/18 9:55
                     if (res.data.code === 0) {
                         this.treeData = res.data.data;
                     } else {
-                        this.$message.error("加载菜单树时发生异常");
+                        this.$message.error(res.data.desc);
                     }
                 });
             },
@@ -186,6 +193,43 @@ Date: 2019/9/18 9:55
                         message: '已取消删除'
                     });
                 });
+            },
+            getSelectMenuItem(id) {
+              getMenuItemsByMenuId({id: id}).then(res =>{
+                  if (res.data.code === 0) {
+                      this.selectMenuItemList = res.data.data;
+                      this.selectMenuId = id;
+                  } else {
+                      this.$message.error(res.data.desc);
+                  }
+              });
+            },
+            handleChange(targetKeys, direction, moveKeys) {
+                let menuId = this.selectMenuId;
+                let menuItemId = moveKeys;
+                let index = targetKeys.length;
+                // 将移动的菜单项增加/删除
+                if (direction === 'left'){
+                    //执行删除操作
+                    delMenuRelation({menuId: menuId, menuItemId: menuItemId}).then(res => {
+                        if (res.data.code === 0) {
+                            this.$message.success(res.data.desc);
+                            this.selectMenuItemList = targetKeys;
+                        } else {
+                            this.$message.error(res.data.desc);
+                        }
+                    })
+                } else if (direction === 'right'){
+                    //执行新增操作
+                    saveMenuRelation({menuId: menuId, menuItemId: menuItemId, index: index}).then(res => {
+                        if (res.data.code === 0) {
+                            this.$message.success(res.data.desc);
+                            this.selectMenuItemList = targetKeys;
+                        } else {
+                            this.$message.error(res.data.desc);
+                        }
+                    })
+                }
             },
             handleSubmit(){},
         }

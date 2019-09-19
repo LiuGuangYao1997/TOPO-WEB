@@ -46,3 +46,9 @@ export const getNodeTypeList = data => post('/node/getNodeTypeList', data);
 export const getLineTypeList = data => post('/line/getLineTypeList', data);
 // 查询菜单项列表接口
 export const getMenuItemMapList = data => post('/Menu/getMenuItemMapList', data);
+// 查询选择的菜单所关联的菜单项接口
+export const getMenuItemsByMenuId = data => post('/Menu/getMenuItemIdListByMenuId', data);
+// 删除菜单与菜单项对应关系接口
+export const delMenuRelation = data => post('/Menu/delMenuRelation', data);
+// 新增菜单与菜单项对应关系接口
+export const saveMenuRelation = data => post('/Menu/saveMenuRelation', data);
