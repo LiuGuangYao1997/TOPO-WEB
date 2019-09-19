@@ -24,7 +24,7 @@ Date: 2019/9/18 9:55
           </el-tree>
         </div>
       </a-col>
-      <a-col>
+      <a-col :span="16">
         <a-row>
           <!-- 搜索表单 -->
         </a-row>
@@ -38,11 +38,19 @@ Date: 2019/9/18 9:55
 
 <script>
     import ARow from "ant-design-vue/es/grid/Row";
+    import {getMenuTree} from "../api/requestManage.js";
+
     export default {
         name: "menuConfig",
         components: {ARow},
         created() {
-
+          getMenuTree().then(res => {
+              if (res.data.code === 0) {
+                  this.treeData = res.data.data;
+              } else {
+                  this.$message.error("加载菜单树时发生异常");
+              }
+          });
         },
         data () {
             return {
@@ -50,8 +58,39 @@ Date: 2019/9/18 9:55
             }
         },
         methods: {
-            renderContent(){
-
+            renderContent(h, { node, data, store }) {
+                if (data.id === 'blankAreaMenu' || data.id === 'nodeRightClickMenu' || data.id === 'lineRightClickMenu') {
+                    return (
+                        <span class="custom-tree-node">
+                        <a-popover trigger="hover">
+                        <template slot="content">
+                        <a-button size="small" on-click={()=> this.insertMenuItem()}>新增</a-button>
+                    </template>
+                    <span>{node.label}</span>
+                    </a-popover>
+                    </span>);
+                } else if (data.objClass === '默认'){
+                    return (
+                        <span class="custom-tree-node">
+                        <a-popover trigger="hover">
+                        <template slot="content">
+                        <a-button size="small" on-click={()=> this.insertMenuItem()}>修改</a-button>
+                    </template>
+                    <span>{node.label}</span>
+                    </a-popover>
+                    </span>);
+                } else {
+                    return (
+                        <span class="custom-tree-node">
+                        <a-popover trigger="hover">
+                        <template slot="content">
+                        <a-button size="small" on-click={()=> this.insertMenuItem()}>修改</a-button>
+                        <a-button size="small" on-click={()=> this.insertMenuItem()}>删除</a-button>
+                    </template>
+                    <span>{node.label}</span>
+                    </a-popover>
+                    </span>);
+                }
             },
 
         }

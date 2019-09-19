@@ -72,7 +72,7 @@ Date: 2019/9/16 14:45
         components: {AFormItem, ACol, ARow},
         created() {
             getMenuItemTree().then(res => {
-                if (res.data.code == 0){
+                if (res.data.code === 0){
                     this.treeData = res.data.data
                 } else {
                     this.$message.error("加载菜单项树时发生异常");

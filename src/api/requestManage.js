@@ -33,5 +33,8 @@ export const menuItemUpdate = data => post('/Menu/updateMenuItem', data);
 export const menuItemDelete = data => post('/Menu/delMenuItem', data);
 // 查询菜单项详情接口
 export const menuItemQueryById = data => post('Menu/findMenuItemById', data);
-// 查询菜单树接口
+// 查询菜单项树接口
 export const getMenuItemTree = data => post('/Menu/getMenuItemTree', data);
+
+// 查询菜单树接口
+export const getMenuTree = data => post('/Menu/getMenuTree', data);
