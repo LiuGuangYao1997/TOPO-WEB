@@ -51,7 +51,7 @@ Date: 2019/9/18 9:55
 
 <script>
     import ARow from "ant-design-vue/es/grid/Row";
-    import {getMenuTree, getNodeTypeList, getLineTypeList} from "../api/requestManage.js";
+    import {getMenuTree, getNodeTypeList, getLineTypeList, deleteMenuConfig} from "../api/requestManage.js";
     import AFormItem from "ant-design-vue/es/form/FormItem";
 
     export default {
@@ -101,7 +101,7 @@ Date: 2019/9/18 9:55
                         <a-popover trigger="hover">
                         <template slot="content">
                         <a-button size="small" on-click={()=> this.insertMenuItem()}>修改</a-button>
-                        <a-button size="small" on-click={()=> this.insertMenuItem()}>删除</a-button>
+                        <a-button size="small" on-click={()=> this.deleteMenu(data.id, data.label)}>删除</a-button>
                     </template>
                     <span>{node.label}</span>
                     </a-popover>
@@ -132,8 +132,43 @@ Date: 2019/9/18 9:55
                     });
                 }
             },
+            refreshMenuTree() {
+                getMenuTree().then(res => {
+                    if (res.data.code === 0) {
+                        this.treeData = res.data.data;
+                    } else {
+                        this.$message.error("加载菜单树时发生异常");
+                    }
+                });
+            },
+            deleteMenu(id, label) {
+                this.$confirm("菜单Id: " + id + ",  菜单名: " + label, '确定要删除菜单?', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    deleteMenuConfig({id: id}).then(res => {
+                        if(res.data.code === 0){
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                            this.refreshMenuTree();
+                        }else {
+                            this.$message({
+                                type: 'error',
+                                message: res.data.desc
+                            });
+                        }
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
             handleSubmit(){},
-
         }
     }
 </script>
