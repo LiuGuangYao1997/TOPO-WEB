@@ -43,6 +43,11 @@ Date: 2019/9/18 9:55
         </a-row>
         <a-row>
           <!-- 穿梭框 -->
+          <a-transfer
+            :dataSource="menuItemList"
+            :render="item=>item.title"
+            :listStyle="{width:'300px', height: '400px'}"
+          ></a-transfer>
         </a-row>
       </a-col>
     </a-row>
@@ -51,7 +56,13 @@ Date: 2019/9/18 9:55
 
 <script>
     import ARow from "ant-design-vue/es/grid/Row";
-    import {getMenuTree, getNodeTypeList, getLineTypeList, deleteMenuConfig} from "../api/requestManage.js";
+    import {
+        getMenuTree,
+        getNodeTypeList,
+        getLineTypeList,
+        deleteMenuConfig,
+        getMenuItemMapList
+    } from "../api/requestManage.js";
     import AFormItem from "ant-design-vue/es/form/FormItem";
 
     export default {
@@ -65,12 +76,20 @@ Date: 2019/9/18 9:55
                   this.$message.error("加载菜单树时发生异常");
               }
           });
+          getMenuItemMapList().then(res => {
+              if (res.data.code === 0) {
+                  this.menuItemList = res.data.data;
+              } else {
+                  this.$message.error("加载菜单项列表时发生异常");
+              }
+          });
         },
         data () {
             return {
                 treeData: [],
                 insertFrom: this.$form.createForm(this),
                 objClassData:['默认'],
+                menuItemList: [],
             }
         },
         methods: {

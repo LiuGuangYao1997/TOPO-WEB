@@ -44,3 +44,5 @@ export const deleteMenuConfig = data => post('/Menu/delMenuConfig', data);
 export const getNodeTypeList = data => post('/node/getNodeTypeList', data);
 // 查询连线类型接口
 export const getLineTypeList = data => post('/line/getLineTypeList', data);
+// 查询菜单项列表接口
+export const getMenuItemMapList = data => post('/Menu/getMenuItemMapList', data);
