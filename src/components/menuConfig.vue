@@ -13,7 +13,7 @@ Date: 2019/9/18 9:55
     </div>
     <!-- 页面内容 -->
     <a-row>
-      <a-col>
+      <a-col :span="8">
         <!-- 树形组件 -->
         <div class="menuItemTree">
           <el-tree
@@ -27,6 +27,16 @@ Date: 2019/9/18 9:55
       <a-col :span="16">
         <a-row>
           <!-- 搜索表单 -->
+          <a-form layout="inline" :form="insertFrom" @submit="handleSubmit">
+            <a-form-item label="菜单类型">
+              <a-input disabled placeholder="空白区域/节点/连线"  v-decorator="['type']"></a-input>
+            </a-form-item>
+            <a-form-item label="对象分类">
+              <a-select defaultValue="默认" style="width: 120px" >
+                <a-select-option v-for="objClass in objClassData" :key="objClass">{{objClass}}</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-form>
         </a-row>
         <a-row>
           <!-- 穿梭框 -->
@@ -39,10 +49,11 @@ Date: 2019/9/18 9:55
 <script>
     import ARow from "ant-design-vue/es/grid/Row";
     import {getMenuTree} from "../api/requestManage.js";
+    import AFormItem from "ant-design-vue/es/form/FormItem";
 
     export default {
         name: "menuConfig",
-        components: {ARow},
+        components: {AFormItem, ARow},
         created() {
           getMenuTree().then(res => {
               if (res.data.code === 0) {
@@ -55,6 +66,8 @@ Date: 2019/9/18 9:55
         data () {
             return {
                 treeData: [],
+                insertFrom: this.$form.createForm(this),
+                objClassData:['默认'],
             }
         },
         methods: {
@@ -64,7 +77,7 @@ Date: 2019/9/18 9:55
                         <span class="custom-tree-node">
                         <a-popover trigger="hover">
                         <template slot="content">
-                        <a-button size="small" on-click={()=> this.insertMenuItem()}>新增</a-button>
+                        <a-button size="small" on-click={()=> this.insertMenu(data.id)}>新增</a-button>
                     </template>
                     <span>{node.label}</span>
                     </a-popover>
@@ -92,6 +105,22 @@ Date: 2019/9/18 9:55
                     </span>);
                 }
             },
+            insertMenu(id){
+                if (id === 'blankAreaMenu') {
+                  this.insertFrom.setFieldsValue({
+                      type: '空白区域菜单'
+                  })
+                } else if (id === 'nodeRightClickMenu') {
+                    this.insertFrom.setFieldsValue({
+                        type: '节点右键菜单'
+                    })
+                } else if (id === 'lineRightClickMenu') {
+                    this.insertFrom.setFieldsValue({
+                        type: '连线右键菜单'
+                    })
+                }
+            },
+            handleSubmit(){},
 
         }
     }
