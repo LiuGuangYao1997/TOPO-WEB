@@ -224,7 +224,13 @@ Date: 2019/9/18 9:55
                     saveMenuRelation({menuId: menuId, menuItemId: menuItemId, index: index}).then(res => {
                         if (res.data.code === 0) {
                             this.$message.success(res.data.desc);
-                            this.selectMenuItemList = targetKeys;
+                            getMenuItemsByMenuId({id: this.selectMenuId}).then(res =>{
+                                if (res.data.code === 0) {
+                                    this.selectMenuItemList = res.data.data;
+                                } else {
+                                    this.$message.error(res.data.desc);
+                                }
+                            });
                         } else {
                             this.$message.error(res.data.desc);
                         }
